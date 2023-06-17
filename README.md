@@ -1,14 +1,22 @@
-# ESP-EASY-Rules
+# ESP32 Irrigation Controller with ESP EASY - Rules Code
 
-ESP EASY Rules
+This project showcases the ESP EASY rules code for an ESP32-based irrigation controller.
+
+## Requirements
+
+I used the following components to build the controller:
+
+- ESP32 microcontroller
+- ESP EASY software
+- Custom-built 24V water valve power driver
 
 ```
 on System#Boot do
 	loopTimerSet,11,60
-  Let,1,900 //gras  in sec
-  Let,2,2000 //dripline  in sec
-  Let,4,1600  //weges  in sec
-  Let,5,5 //Greenhouse  in sec
+  Let,1,900 //gras watering time in sec
+  Let,2,2000 //dripline watering time in sec
+  Let,4,1600  //wegetables dripline watering time in sec
+  Let,5,5 //Greenhouse driplines in sec
 endon
 on Rules#Timer=11 do
  Pulse,33,1,100 //pulse led on pin 33 shortly on 100ms
