@@ -10,6 +10,8 @@ I used the following components to build the controller:
 - ESP EASY software
 - Custom-built 24V water valve power driver
 
+## Rules code
+
 ```
 on System#Boot do
 	loopTimerSet,11,60
