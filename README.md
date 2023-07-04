@@ -10,18 +10,15 @@ I used the following components to build the controller:
 - ESP EASY software
 - Custom-built 24V water valve power driver
 
-## Rules code
+## Rules set 1
 
 ```
 on System#Boot do
 	loopTimerSet,11,60
-  Let,1,900 //gras watering time in sec
-  Let,2,2000 //dripline watering time in sec
-  Let,4,1600  //wegetables dripline watering time in sec
-  Let,5,5 //Greenhouse driplines in sec
-endon
-on Rules#Timer=11 do
- Pulse,33,1,100 //pulse led on pin 33 shortly on 100ms
+  Let,1,600 //gras  in sec
+  Let,2,1800 //dripline  in sec
+  Let,4,1500  //weges  in sec
+  Let,5,1800 //Greenhouse  in sec
 endon
 on GrassBackON do
   gpio,13,1
@@ -73,27 +70,65 @@ on startWatering2 do
 endon
 On Rules#Timer=2 do
   event,GrassFrontOFF
-  event,startWatering3
+  event,startDrip
 endOn
-on startWatering3 do
+on startDrip do
 	timerSet,3,%v2%
   event,DripLineON
-endon
-On Rules#Timer=3 do
-  event,DripLineOFF
-  event,startWatering4
-endOn
-on startWatering4 do
-	timerSet,4,%v4%
-  timerSet,5,%v5%
+  timerSet,4,%v4%
   event,VegetablesON
+  timerSet,5,%v5%
   event,GreenhouseLeftON
   event,GreenhouseRightON
 endon
+On Rules#Timer=3 do
+  event,DripLineOFF
+endOn
 On Rules#Timer=4 do
   event,VegetablesOFF
 endOn
 On Rules#Timer=5 do
+  event,GreenhouseRightOFF
+  event,GreenhouseLeftOFF
+endOn
+
+```
+
+## Rules set 2
+
+```
+on startShort do
+	timerSet,21,(%v1%)/2
+  event,GrassBackON
+endon
+On Rules#Timer=21 do
+  event,GrassBackOFF
+  event,startShort2
+endOn
+on startShort2 do
+	timerSet,22,(%v1%)/2
+  event,GrassFrontON
+endon
+On Rules#Timer=22 do
+  event,GrassFrontOFF
+  event,startDripShort
+endOn
+on startDripShort do
+	timerSet,23,(%v2%)/2
+  event,DripLineON
+  timerSet,24,(%v4%)/2
+  event,VegetablesON
+  timerSet,25,(%v5%)/2
+  event,GreenhouseLeftON
+  event,GreenhouseRightON
+endon
+On Rules#Timer=23 do
+  event,DripLineOFF
+endOn
+On Rules#Timer=24 do
+  event,VegetablesOFF
+endOn
+On Rules#Timer=25 do
   event,GreenhouseRightOFF
   event,GreenhouseLeftOFF
 endOn
@@ -103,22 +138,16 @@ on stopWatering do
 	timerSet,3,0
 	timerSet,4,0
 	timerSet,5,0
+  timerSet,21,0
+	timerSet,22,0
+	timerSet,23,0
+	timerSet,24,0
+	timerSet,25,0
   event,GrassBackOFF
   event,GrassFrontOFF
   event,DripLineOFF
   event,VegetablesOFF
   event,GreenhouseRightOFF
   event,GreenhouseLeftOFF
-endon
-on ToggleGPIO do
-  GPIO,%eventvalue1%,%eventvalue2%
-endon
-on SetGPIOforTime do
-  GPIO,%eventvalue1%,1
-  timerSet,11,%eventvalue2%
-  Let,11,%eventvalue1%
-endon
-on Rules#Timer=11 do
-  GPIO,%v11%,0
 endon
 ```
