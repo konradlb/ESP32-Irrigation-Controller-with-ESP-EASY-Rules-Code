@@ -14,11 +14,18 @@ I used the following components to build the controller:
 
 ```
 on System#Boot do
-	loopTimerSet,11,60
-  Let,1,600 //gras  in sec
-  Let,2,1800 //dripline  in sec
-  Let,4,1500  //weges  in sec
-  Let,5,1800 //Greenhouse  in sec
+ Let,1,900 //gras back  in sec
+ Let,2,1100 //gras front  in sec
+ Let,3,1800 //dripline  in sec
+ Let,4,1500  //weges  in sec
+ Let,5,2400 //Greenhouse  in sec
+
+Let,11,[Var#1]/2 //short
+Let,12,[Var#2]/2 //
+Let,13,[Var#3]/2 //
+Let,14,[Var#4]/2 //
+Let,15,[Var#5]/2 //
+
 endon
 on GrassBackON do
   gpio,13,1
@@ -56,16 +63,19 @@ endon
 on VegetablesOFF do
   gpio,25,0
 endon
+on start do
+  event,startWatering
+endon
 on startWatering do
 	timerSet,1,%v1%
   event,GrassBackON
 endon
 On Rules#Timer=1 do
   event,GrassBackOFF
-  event,startWatering2
+  event,startWateringFront
 endOn
-on startWatering2 do
-	timerSet,2,%v1%
+on startWateringFront do
+	timerSet,2,%v2%
   event,GrassFrontON
 endon
 On Rules#Timer=2 do
@@ -73,7 +83,7 @@ On Rules#Timer=2 do
   event,startDrip
 endOn
 on startDrip do
-	timerSet,3,%v2%
+	timerSet,3,%v3%
   event,DripLineON
   timerSet,4,%v4%
   event,VegetablesON
@@ -99,7 +109,7 @@ endOn
 ```
 //short
 on startShort do
-	timerSet,21,(%v1%)/2
+	timerSet,21,%v11%
   event,GrassBackON
 endon
 On Rules#Timer=21 do
@@ -107,7 +117,7 @@ On Rules#Timer=21 do
   event,startShort2
 endOn
 on startShort2 do
-	timerSet,22,(%v1%)/2
+	timerSet,22,%v12%
   event,GrassFrontON
 endon
 On Rules#Timer=22 do
@@ -115,11 +125,11 @@ On Rules#Timer=22 do
   event,startDripShort
 endOn
 on startDripShort do
-	timerSet,23,(%v2%)/2
+	timerSet,23,%v13%
   event,DripLineON
-  timerSet,24,(%v4%)/2
+  timerSet,24,%v14%
   event,VegetablesON
-  timerSet,25,(%v5%)/2
+  timerSet,25,%v15%
   event,GreenhouseLeftON
   event,GreenhouseRightON
 endon
@@ -143,7 +153,7 @@ On Rules#Timer=26 do
   event,GreenhouseRightOFF
   event,GreenhouseLeftOFF
 endOn
-on stopWatering do
+on stop do
 	timerSet,1,0
 	timerSet,2,0
 	timerSet,3,0
