@@ -97,6 +97,7 @@ endOn
 ## Rules set 2
 
 ```
+//short
 on startShort do
 	timerSet,21,(%v1%)/2
   event,GrassBackON
@@ -132,6 +133,16 @@ On Rules#Timer=25 do
   event,GreenhouseRightOFF
   event,GreenhouseLeftOFF
 endOn
+//only GreenHouse
+on startGreen do
+  timerSet,26,%v5%
+  event,GreenhouseLeftON
+  event,GreenhouseRightON
+endon
+On Rules#Timer=26 do
+  event,GreenhouseRightOFF
+  event,GreenhouseLeftOFF
+endOn
 on stopWatering do
 	timerSet,1,0
 	timerSet,2,0
@@ -143,6 +154,7 @@ on stopWatering do
 	timerSet,23,0
 	timerSet,24,0
 	timerSet,25,0
+  timerSet,26,0
   event,GrassBackOFF
   event,GrassFrontOFF
   event,DripLineOFF
